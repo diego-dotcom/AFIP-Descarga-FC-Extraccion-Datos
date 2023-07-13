@@ -41,22 +41,15 @@ WebDriverWait(driver, 5) \
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,'input#F1\:btnIngresar')))\
     .click()
-WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.CSS_SELECTOR,'#serviciosMasUtilizados > div > div > div > div:nth-child(5) > div > a')))\
-    .click()
-#Nos desplazamos un poco para visualizar el servicio buscado
 
-driver.execute_script("window.scrollBy(0, 400);")
-time.sleep(1)
-driver.execute_script("window.scrollBy(0, 400);")
-time.sleep(1)
+time.sleep(2)
+buscador = driver.find_element(By.ID,'buscadorInput')
+buscador.send_keys('Comprobantes en L')
+mis_comprobantes = driver.find_element(By.CLASS_NAME,'search-item')
+mis_comprobantes.click()
+    
+time.sleep(2)
 
-#Busco el servicio comprobantes en linea
-WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.XPATH, "//h3[contains(text(), 'COMPROBANTES EN LÍNEA')]")))\
-    .click()
-time.sleep(1)
-# Obtener las ventanas abiertas
 window_handles = driver.window_handles
 
 # Cambiar al control de la última pestaña
@@ -100,9 +93,16 @@ botones = driver.find_elements(By.CSS_SELECTOR, "tr input[type='button'][value='
 
 if len(botones) == 0:
     print("No hay facturas para descargar. Finalizando...")
-    
-    break
+
 # Hacer clic en cada botón uno a uno para descargar facturas
 for boton in botones:
     boton.click()
     time.sleep(1)  # Pausa de 1 segundo antes de hacer clic en el siguiente botón
+
+driver.close()
+driver.switch_to.window(driver.window_handles[0])
+time.sleep(1)
+driver.find_element(By.ID,'contenedorContribuyente').click()
+driver.find_element(By.XPATH, "//button[@title='Salir']")
+time.sleep(1)
+driver.close()
